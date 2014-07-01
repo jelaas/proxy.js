@@ -1,5 +1,7 @@
 #!/bin/sysjs
 
+"use strict";
+
 /*
  * File: proxy.js
  * Implements: simple sender-listener proxy function.
@@ -11,9 +13,9 @@
 
 // 001XNNNNNNN\n
 // version S|L NAME
-Sys=Sys1;
+var Sys=Sys1;
 
-sockets = [];
+var sockets = [];
 
 function event_connecting(cfg)
 {
@@ -148,7 +150,7 @@ function main()
 	    continue;
 	}
 	if(arguments[i] == '-f') {
-	    cfg.logfile = Sys.open(arguments[i+1], Sys.O_RDWR|Sys.O_APPEND|Sys.O_CREAT, 0644);
+	    cfg.logfile = Sys.open(arguments[i+1], Sys.O_RDWR|Sys.O_APPEND|Sys.O_CREAT, parseInt("0644", 8));
 	    if(cfg.logfile == -1) {
 		Sys.dprint(1, 'Failed to open logfile '+arguments[i+1]+'\n');
 		Sys.exit(1);
@@ -174,7 +176,7 @@ function main()
     server(cfg.addr, cfg.port);
     
     while(1) {
-	ret = Sys.poll( sockets, sockets.length, 5000);
+	var ret = Sys.poll( sockets, sockets.length, 5000);
 	if(cfg.verbose) Sys.dprint(1, "Poll: "+JSON.stringify(ret)+"\n");
 	if(ret && ret.rc) {
 	    var length = ret.fds.length;
